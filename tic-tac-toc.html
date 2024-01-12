@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tic-tac-toc</title>
+</head>
+<style>
+    body{
+        background-color: black;
+    }
+ #cellcontainer{
+    background-color: black;
+    display: grid;
+    grid-template-columns: repeat(3,auto);
+    margin: auto;
+    width:240px ; 
+    font-size: 50px;
+    cursor: pointer;
+ }
+ .cell{
+    height: 75px;
+    width: 75px;
+    border: 3px solid;
+    border-color: fuchsia;  
+    color: aqua;
+ }
+ #gamecontainer{
+    font-family: cursive;
+    text-align: center;
+ }
+ #statusText{
+    color: aqua;
+ }
+ h1{
+    color: fuchsia;
+    text-align: center;
+ }
+ #Restartbtn{
+      color: aqua;
+      background-color: fuchsia;
+      font-family:fantasy;
+      cursor: pointer;
+      height: 30px;
+      width: 70px;
+ }
+</style>
+<body>
+    <h1>Tic-Tac-Toc</h1>
+    <div id="gamecontainer">
+        <div id="cellcontainer">
+        <div cellindex="0" class="cell"></div>
+        <div cellindex="1" class="cell"></div>
+        <div cellindex="2" class="cell"></div>
+        <div cellindex="3" class="cell"></div>
+        <div cellindex="4" class="cell"></div>
+        <div cellindex="5" class="cell"></div>
+        <div cellindex="6" class="cell"></div>
+        <div cellindex="7" class="cell"></div>
+        <div cellindex="8" class="cell"></div>
+    </div>
+    <h2 id="statusText"></h2>
+    <button id="Restartbtn">Restart</button>
+    </div>
+    <script>
+        const cells=document.querySelectorAll(".cell");
+        const statusText=document.querySelector("#statusText");
+        const Restartbtn=document.querySelector("#Restartbtn");
+        const winCondition=[
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+    let option =["","","","","","","","",""];
+   let currentPlayer="X";
+    let running=false;
+    initializeGame();
+
+        function initializeGame(){
+            cells.forEach(cell => cell.addEventListener("click",cellClicked));
+            Restartbtn.addEventListener("click",restart);
+            statusText.textContent=`${currentPlayer}'s trun`;
+            running=true;
+        }
+        function cellClicked(){
+            const cellindex=this.getAttribute("cellindex");
+            if(option[cellindex]!=""||!running){
+                return;
+            }
+            
+            update(this,cellindex);
+            checkWinner();
+            
+
+        }
+        function update(cell,index){
+            option[index]=currentPlayer;
+            cell.textContent=currentPlayer;
+          
+
+        }
+        function changePlayer(){
+            if(currentPlayer=="X"){
+                currentPlayer="O";
+            }
+            else{
+                currentPlayer="X";
+            }
+            statusText.textContent=`${currentPlayer}'s trun`;
+        }
+        function checkWinner(){
+            let roundWon =false;
+            let winner=currentPlayer;
+            for(let i=0;i<winCondition.length;i++){
+                 const check=winCondition[i];
+                 if(option[check[0]]==""||option[check[1]]==""||option[check[2]]==""){
+                    continue;
+                 }
+                if(option[check[0]]==option[check[1]]&&option[check[0]]==option[check[2]]&&option[check[1]]==option[check[2]]){
+                      roundWon=true;
+                        break;
+                }
+                
+            }
+            if(roundWon){
+                statusText.textContent=`The winner is ${currentPlayer}`;
+                running=false;
+            }
+            else if(!option.includes("")){
+                statusText.textContent="Draw";
+            }
+            else{
+                changePlayer();
+            }
+        }
+        function restart(){
+            currentPlayer="X";
+            option =["","","","","","","","",""];
+            cells.forEach(cell=> cell.textContent="");
+            statusText.textContent=`${currentPlayer}'s trun`
+            running=true;
+        }
+    </script>
+    
+</body>
+<script>
+
+</script>
+</html>
